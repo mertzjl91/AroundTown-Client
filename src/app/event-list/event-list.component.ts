@@ -27,8 +27,9 @@ export class EventListComponent implements OnInit {
   faThumbsUp = faThumbsUp;
   faThumbsDown = faThumbsDown;
   isFavorite = false; //remove and find a way to associate it with each ind event
-  currentUserId = sessionStorage.getItem("id");
+  currentUserId = Number(sessionStorage.getItem("id"));
   favoriteEvent: Favorite;
+  allFavorites: Favorite[];
 
   constructor(private route: ActivatedRoute, private router: Router, 
     private eventService: EventService, private loginservice: AuthenticationService, private favoriteService: FavoriteServiceService) {
@@ -39,21 +40,25 @@ export class EventListComponent implements OnInit {
     this.eventService.findAll().subscribe(data => {
       this.events = data;
       this.alphabetizedByName = this.events.sort(function(a, b) {return a.name.localeCompare(b.name)});
+     
     });
+    this.favoriteService.listAllFavorites().subscribe(favData => {
+      this.allFavorites = favData;
+    })
+
   }
 
   public addFavorite(eventId: number) {
     if(this.isFavorite === true) {
-        this.favoriteService.deleteFavoriteEvent(eventId, Number(this.currentUserId));
+        this.favoriteService.deleteFavoriteEvent(eventId, Number(this.currentUserId)).subscribe();
         
 
 
     } else {
       this.favoriteEvent.eventId = eventId;
       this.favoriteEvent.userId = Number(this.currentUserId);
-      this.favoriteService.saveFavoriteEvent(this.favoriteEvent);
+      this.favoriteService.saveFavoriteEvent(this.favoriteEvent).subscribe();
       
-      //pull userId and eventId to pass through the deleteFavoriteEvent function
 
     }
     this.isFavorite = !this.isFavorite;

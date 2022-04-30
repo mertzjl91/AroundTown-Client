@@ -26,9 +26,10 @@ export class LoginComponent implements OnInit {
     loginFailSuccess(results: any) {
       console.log(results)
       if(results.status === "success") {
-        sessionStorage.setItem("username", this.username);
-        this.user = this.userService.findUserByUsername(this.username);
-        sessionStorage.setItem("id", this.user.id)//Not working, create a getIdByUsername function on both ends
+        sessionStorage.setItem("username", this.user.username);
+        this.userService.findIdByUsername(this.user.username).subscribe((idResult) => 
+          sessionStorage.setItem('id', idResult.toString()));
+
         this.router.navigate([`userprofile/${this.user.username}`]);
       } else {
         console.log("failure")

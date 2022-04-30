@@ -15,6 +15,7 @@ export class UserFormComponent implements OnInit {
   emailAvailable: boolean = true;
   usernameAvailable: boolean = true;  
   users: User[] = [];
+  currentUserId: number;
 
   constructor(private route: ActivatedRoute, 
     private router: Router, 
@@ -31,8 +32,14 @@ export class UserFormComponent implements OnInit {
 
    onSubmit(password: String, confirmPassword: String) {
       if(password === confirmPassword) {
-        sessionStorage.setItem('username', 'password');
-        this.userService.save(this.user).subscribe((result) => this.goToProfile());
+        sessionStorage.setItem('username', this.user.username);
+        this.userService.save(this.user).subscribe((result) => {
+          this.userService.findIdByUsername(this.user.username).subscribe((idResult) => {
+            console.log(idResult);
+            sessionStorage.setItem('id', idResult.toString());
+          })
+          this.goToProfile()});
+        
       }
    }
 

@@ -39,4 +39,9 @@ export class UserService {
     return this.http.get<User>(`${this.userURL}/username/${username}`);
   }
 
+  public findIdByUsername(username: String) {
+
+    return this.http.get<Number>(`${this.userURL}/getIdByUsername/${username}`);
+  }
+
 }

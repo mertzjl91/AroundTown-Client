@@ -25,6 +25,7 @@ export class UserProfileComponent implements OnInit {
   ngOnInit():void {
     this.currentUser = new User;
     this.getUser(this.route.snapshot.params.username);
+    
   }
 
   public getUser(username: String): void {
