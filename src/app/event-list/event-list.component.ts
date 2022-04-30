@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Event } from '../model/event';
+import { LoginComponent } from '../login/login.component';
 import { EventService } from '../service/event-service.service';
+import { FavoriteServiceService } from '../service/favorite-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from "rxjs";
 import { AuthenticationService } from '../service/authentication.service';
+import { Favorite } from '../model/favorite';
 
 
 
@@ -23,14 +26,37 @@ export class EventListComponent implements OnInit {
   amPm: String;
   faThumbsUp = faThumbsUp;
   faThumbsDown = faThumbsDown;
+  isFavorite = false; //remove and find a way to associate it with each ind event
+  currentUserId = sessionStorage.getItem("id");
+  favoriteEvent: Favorite;
 
-  constructor(private route: ActivatedRoute, private router: Router, private eventService: EventService, private loginservice: AuthenticationService) { }
+  constructor(private route: ActivatedRoute, private router: Router, 
+    private eventService: EventService, private loginservice: AuthenticationService, private favoriteService: FavoriteServiceService) {
+      this.favoriteEvent = new Favorite();
+     }
 
   ngOnInit() {
     this.eventService.findAll().subscribe(data => {
       this.events = data;
       this.alphabetizedByName = this.events.sort(function(a, b) {return a.name.localeCompare(b.name)});
     });
+  }
+
+  public addFavorite(eventId: number) {
+    if(this.isFavorite === true) {
+        this.favoriteService.deleteFavoriteEvent(eventId, Number(this.currentUserId));
+        
+
+
+    } else {
+      this.favoriteEvent.eventId = eventId;
+      this.favoriteEvent.userId = Number(this.currentUserId);
+      this.favoriteService.saveFavoriteEvent(this.favoriteEvent);
+      
+      //pull userId and eventId to pass through the deleteFavoriteEvent function
+
+    }
+    this.isFavorite = !this.isFavorite;
   }
 
   public deleteEvent(eventId: number) {

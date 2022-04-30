@@ -37,7 +37,8 @@
                     <td [hidden]="event.familyFriendly === true"><fa-icon [icon]="faThumbsDown" [styles]="{'color': 'red'}"></fa-icon></td> 
                     <td>
                         <button class="badge badge-success mr-2" *ngIf="isUserLoggedIn()" routerLink="/edit-events/{{event.eventId}}" routerLinkActive="active">Edit</button><br>
-                        <button class="badge badge-danger mr-2" *ngIf="isUserLoggedIn()" (click)="deleteEvent(event.eventId)">Delete</button></td>               
+                        <button class="badge badge-danger mr-2" *ngIf="isUserLoggedIn()" (click)="deleteEvent(event.eventId)">Delete</button> 
+                        <button class="badge badge-danger mr-2" *ngIf="isUserLoggedIn()" (click)="addFavorite(event.eventId)">Add to your Favorites</button></td>            
                 </tr>
             </tbody>
         </table>
